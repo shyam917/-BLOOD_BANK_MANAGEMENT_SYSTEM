@@ -20,7 +20,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
-
+import java.sql.*;
 public class UserLogin {
 	public JFrame frame;
 	public final JPanel panel = new JPanel();
@@ -95,22 +95,41 @@ public class UserLogin {
 	                JOptionPane.showMessageDialog(null, "Please fill all the fields");
 	            }
 				else {
-//					try {
 	                String query = "select * from receiver where r_name = '" + username + "' and password = '" + password + "'";
 	                CheckForData check = new CheckForData(con);
 	                if (check.check_data_exist(query)){
-	                	receiver_info r_info  = new receiver_info();
+	                        String[] fields = new String[4];
+	                        fields[0] = "";
+	                        fields[1] = "";
+	                        fields[2] = "";
+	                        fields[3] = "";
+	                        try{
+	                            String query1 = "select * from receiver where r_name = ?;";
+	                            PreparedStatement pst = con.prepareStatement(query1);
+	                            pst.setString(1, username);
+	                            ResultSet rs = pst.executeQuery();
+	                            if(rs.next()) {
+	                            	
+	                                fields[0] = rs.getString("r_name");
+	                                fields[1] = rs.getString("email");
+	                                fields[2] = rs.getString("contact");
+	                                fields[3] = rs.getString("bloodtype");
+	                            }
+	                            
+	                        }
+	                        
+	                        catch(Exception e3) {
+	                        	System.out.println(e3);
+	                        }
+	                	receiver_info r_info  = new receiver_info(fields,con);
 	                  
 	                    r_info.frame.setVisible(true);
 	                    frame.dispose();
 	                }
 	                else {
 	                	JOptionPane.showMessageDialog(null, "Invalid credentials");
+	          
 	                }
-//				}
-////	                catch(Exception e2) {
-//	                    JOptionPane.showMessageDialog(null, "Login Failed");
-//	                }
 			}
 			}
 		});

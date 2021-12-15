@@ -17,6 +17,8 @@ import sqlUtils.CheckForData;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 
 public class LoginPage {
@@ -99,16 +101,41 @@ Connection con;
 			else {
                 String query = "select * from Donor where name = '" + username + "' and password = '" + password + "'";
                 CheckForData check = new CheckForData(con);
+                if (check.check_data_exist(query)) {
+                }
                 if (check.check_data_exist(query)){
-                    Home home = new Home();
-                  
-                    home.frame.setVisible(true);
-                    frame.dispose();
-                }
-                
-                else{
-                    JOptionPane.showMessageDialog(null, "Login Failed");
-                }
+                    String[] fields = new String[4];
+                    fields[0] = "";
+                    fields[1] = "";
+                    fields[2] = "";
+                    fields[3] = "";
+                    try{
+                        String query1 = "select * from 	Donor where name = ?;";
+                        PreparedStatement pst = con.prepareStatement(query1);
+                        pst.setString(1, username);
+                        ResultSet rs = pst.executeQuery();
+                        if(rs.next()) {
+                        	
+                            fields[0] = rs.getString("name");
+                            fields[1] = rs.getString("email");
+                            fields[2] = rs.getString("phone");
+                            fields[3] = rs.getString("bloodtype");
+                        }
+                        
+                    }
+                    
+                    catch(Exception e3) {
+                    	System.out.println(e3);
+                    }
+            	Home d_info  = new Home(fields,con);
+             
+                d_info.frame.setVisible(true);
+                frame.dispose();
+            }
+               else {
+            	JOptionPane.showMessageDialog(null, "Invalid credentials");
+      
+            }
 			}
 			}
 			
