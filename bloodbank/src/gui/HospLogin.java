@@ -5,14 +5,20 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import javax.swing.JButton;
 import java.awt.Font;
 import javax.swing.JTextField;
+
+import sqlUtils.CheckForData;
+
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 
 public class HospLogin {
@@ -84,6 +90,56 @@ public class HospLogin {
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNewButton_1.setBackground(Color.GRAY);
 		btnNewButton_1.setBounds(176, 216, 91, 35);
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			String username = textField.getText();
+			String password = passwordField.getText();
+			if (username.equals("") || password.equals("")) {
+                JOptionPane.showMessageDialog(null, "Please fill all the fields");
+            }
+			else {
+                String query = "select * from hospital where hosp_name = '" + username + "' and password = '" + password + "'";
+                CheckForData check = new CheckForData(con);
+                if (check.check_data_exist(query)) {
+                }
+                if (check.check_data_exist(query)){
+                    String[] fields = new String[5];
+                    fields[0] = "";
+                    fields[1] = "";
+                    fields[2] = "";
+                    fields[3] = "";
+					fields[4] = "";
+                    try{
+                        String query1 = "select * from 	hospital where hosp_name = ?;";
+                        PreparedStatement pst = con.prepareStatement(query1);
+                        pst.setString(1, username);
+                        ResultSet rs = pst.executeQuery();
+                        if(rs.next()) {
+                        	
+                            fields[0] = rs.getString("hosp_name");
+                            fields[1] = rs.getString("email");
+                            fields[2] = rs.getString("contact_no");
+                            fields[3] = rs.getString("city");
+							fields[4] = rs.getString("state");
+                        }
+                        
+                    }
+                    
+                    catch(Exception e3) {
+                    	System.out.println(e3);
+                    }
+            	HospitalInfo d_info  = new HospitalInfo(fields,con);
+             
+                d_info.frame.setVisible(true);
+                frame.dispose();
+            }
+               else {
+            	JOptionPane.showMessageDialog(null, "Invalid credentials");
+      
+            }
+			}
+			}
+		});
 		panel_1.add(btnNewButton_1);
 		
 		JButton btnNewButton_1_1 = new JButton("Back");

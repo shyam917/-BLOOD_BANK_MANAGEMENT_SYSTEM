@@ -7,7 +7,7 @@ public class driver {
 	public static void main(String[] args) {
 	String jdbcURL = "jdbc:postgresql://localhost:5432/BloodBank";
     String username = "postgres";
-    String password = "Shyam123$";
+    String password = "postgre";
     ConnectDB connectDB = new ConnectDB(username, password, jdbcURL);
      Connection con = connectDB.getConnection();
      

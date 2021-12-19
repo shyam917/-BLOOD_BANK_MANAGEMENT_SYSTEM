@@ -10,9 +10,14 @@ import java.awt.Color;
 import javax.swing.JButton;
 import java.awt.Font;
 import javax.swing.JTextField;
+
+import sqlUtils.CheckForData;
+
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 
 public class AdminLogin {
@@ -86,7 +91,35 @@ public class AdminLogin {
 		btnNewButton_1.setBackground(Color.GRAY);
 		btnNewButton_1.setBounds(176, 216, 91, 35);
 		panel_1.add(btnNewButton_1);
-		
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String name = textField.getText();
+				String password = passwordField.getText();
+				String query = "select name,email from Admin where name='"+name+"' and password ='"+password+"';";
+                CheckForData check = new CheckForData(con);
+                if (check.check_data_exist(query)){
+                        try{
+                            String query1 = "select name,email from Admin where name= ?;";
+                            PreparedStatement pst = con.prepareStatement(query1);
+                            pst.setString(1, name);
+                            ResultSet rs = pst.executeQuery();
+							if(rs.next()){String email = rs.getString("email");
+							Admindata cobj = new Admindata(name,email,con);
+							cobj.frame.setVisible(true);
+							frame.dispose();
+							}
+                                                  
+                        }
+                        
+                        catch(Exception e3) {
+                        	System.out.println(e3);
+                        }
+                  
+                }
+				
+			}
+			
+		});
 		JButton btnNewButton_1_1 = new JButton("Back");
 		btnNewButton_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
