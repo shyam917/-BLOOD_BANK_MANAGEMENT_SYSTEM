@@ -56,7 +56,7 @@ public class OrgLogin {
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		JLabel lblNewLabel_1 = new JLabel("Organisation Login");
+		JLabel lblNewLabel_1 = new JLabel("Orgnisation Login");
 		lblNewLabel_1.setBounds(174, 10, 288, 47);
 		lblNewLabel_1.setFont(new Font("Times New Roman", Font.BOLD, 35));
 		lblNewLabel_1.setForeground(new Color(178, 34, 34));
@@ -88,59 +88,59 @@ public class OrgLogin {
 		panel_1.add(lblNewLabel_3_1);
 		
 		JButton btnNewButton_1 = new JButton("LOGIN");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					String username = textField.getText();
+					String password = passwordField.getText();
+					if (username.equals("") || password.equals("")) {
+		                JOptionPane.showMessageDialog(null, "Please fill all the fields");
+		            }
+					else {
+		                String query = "select * from organization where org_name = '" + username + "' and password = '" + password + "'";
+		                CheckForData check = new CheckForData(con);
+		                if (check.check_data_exist(query)) {
+		                }
+		                if (check.check_data_exist(query)){
+		                    String[] fields = new String[5];
+		                    fields[0] = "";
+		                    fields[1] = "";
+		                    fields[2] = "";
+		                    fields[3] = "";
+							fields[4] = "";
+		                    try{
+		                        String query1 = "select * from 	organization where org_name = ?;";
+		                        PreparedStatement pst = con.prepareStatement(query1);
+		                        pst.setString(1, username);
+		                        ResultSet rs = pst.executeQuery();
+		                        if(rs.next()) {
+		                        	
+		                            fields[0] = rs.getString("org_name");
+		                            fields[1] = rs.getString("email");
+		                            fields[2] = rs.getString("contact");
+		                            fields[3] = rs.getString("city");
+									fields[4] = rs.getString("state");
+		                        }
+		                        
+		                    }
+		                    
+		                    catch(Exception e3) {
+		                    	System.out.println(e3);
+		                    }
+		            	OrgInfo d_info  = new OrgInfo(fields,con);
+		             
+		                d_info.frame.setVisible(true);
+		                frame.dispose();
+		            }
+		               else {
+		            	JOptionPane.showMessageDialog(null, "Invalid credentials");
+		      
+		            }
+					}
+					}
+				});
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNewButton_1.setBackground(new Color(240, 255, 255));
 		btnNewButton_1.setBounds(176, 216, 91, 35);
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			String username = textField.getText();
-			String password = passwordField.getText();
-			if (username.equals("") || password.equals("")) {
-                JOptionPane.showMessageDialog(null, "Please fill all the fields");
-            }
-			else {
-                String query = "select * from organization where org_name = '" + username + "' and password = '" + password + "'";
-                CheckForData check = new CheckForData(con);
-                if (check.check_data_exist(query)) {
-                }
-                if (check.check_data_exist(query)){
-                    String[] fields = new String[5];
-                    fields[0] = "";
-                    fields[1] = "";
-                    fields[2] = "";
-                    fields[3] = "";
-					fields[4] = "";
-                    try{
-                        String query1 = "select * from 	organization where org_name = ?;";
-                        PreparedStatement pst = con.prepareStatement(query1);
-                        pst.setString(1, username);
-                        ResultSet rs = pst.executeQuery();
-                        if(rs.next()) {
-                        	
-                            fields[0] = rs.getString("org_name");
-                            fields[1] = rs.getString("email");
-                            fields[2] = rs.getString("contact");
-                            fields[3] = rs.getString("city");
-							fields[4] = rs.getString("state");
-                        }
-                        
-                    }
-                    
-                    catch(Exception e3) {
-                    	System.out.println(e3);
-                    }
-            	OrgInfo d_info  = new OrgInfo(fields,con);
-             
-                d_info.frame.setVisible(true);
-                frame.dispose();
-            }
-               else {
-            	JOptionPane.showMessageDialog(null, "Invalid credentials");
-      
-            }
-			}
-			}
-		});
 		panel_1.add(btnNewButton_1);
 		
 		JButton btnNewButton_1_1 = new JButton("Back");

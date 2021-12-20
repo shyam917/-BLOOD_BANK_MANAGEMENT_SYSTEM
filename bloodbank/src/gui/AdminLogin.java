@@ -87,39 +87,40 @@ public class AdminLogin {
 		panel_1.add(lblNewLabel_3_1);
 		
 		JButton btnNewButton_1 = new JButton("LOGIN");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					String name = textField.getText();
+					String password = passwordField.getText();
+					String query = "select name,email from Admin where name='"+name+"' and password ='"+password+"';";
+	                CheckForData check = new CheckForData(con);
+	                if (check.check_data_exist(query)){
+	                        try{
+	                            String query1 = "select name,email from Admin where name= ?;";
+	                            PreparedStatement pst = con.prepareStatement(query1);
+	                            pst.setString(1, name);
+	                            ResultSet rs = pst.executeQuery();
+								if(rs.next()){String email = rs.getString("email");
+								Admindata cobj = new Admindata(name,email,con);
+								cobj.frame.setVisible(true);
+								frame.dispose();
+								}
+	                                                  
+	                        }
+	                        
+	                        catch(Exception e3) {
+	                        	System.out.println(e3);
+	                        }
+	                  
+	                }
+					
+				}
+				
+			});
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNewButton_1.setBackground(Color.GRAY);
 		btnNewButton_1.setBounds(176, 216, 91, 35);
 		panel_1.add(btnNewButton_1);
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String name = textField.getText();
-				String password = passwordField.getText();
-				String query = "select name,email from Admin where name='"+name+"' and password ='"+password+"';";
-                CheckForData check = new CheckForData(con);
-                if (check.check_data_exist(query)){
-                        try{
-                            String query1 = "select name,email from Admin where name= ?;";
-                            PreparedStatement pst = con.prepareStatement(query1);
-                            pst.setString(1, name);
-                            ResultSet rs = pst.executeQuery();
-							if(rs.next()){String email = rs.getString("email");
-							Admindata cobj = new Admindata(name,email,con);
-							cobj.frame.setVisible(true);
-							frame.dispose();
-							}
-                                                  
-                        }
-                        
-                        catch(Exception e3) {
-                        	System.out.println(e3);
-                        }
-                  
-                }
-				
-			}
-			
-		});
+		
 		JButton btnNewButton_1_1 = new JButton("Back");
 		btnNewButton_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

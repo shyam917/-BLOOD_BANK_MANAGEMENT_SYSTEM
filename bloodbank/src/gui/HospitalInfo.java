@@ -94,12 +94,12 @@ String[] fields = new String[4];
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tabbedPane.setSelectedIndex(1);
-				String query = "select * from reciever;";
+				String query = "select * from receiver;";
                 CheckForData check = new CheckForData(con);
                 if (check.check_data_exist(query)){
                       
                         try{
-                            String query1 = "select * from reciever;";
+                            String query1 = "select * from receiver;";
                             PreparedStatement pst = con.prepareStatement(query1);
                             ResultSet rs = pst.executeQuery();
                             int r = 0;
